@@ -56,7 +56,13 @@ shinyServer(function(input, output) {
     evnt <- ((is.na(date_de_dn))) + 0
     y <- Surv(tobs, evnt)[(tobs > 0) & (tobs < 20000)]
     fac <- facteur[(tobs > 0) & (tobs < 20000)]
-    print(survdiff(formula = y ~ fac))
+    res <- survdiff(formula = y ~ fac)
+    print(res)
+    p.val <- 1 - pchisq(res$chisq, length(res$n) - 1)
+    if (p.val < .Machine$double.eps) {
+      cat("\b\b\b\b p-value:\n")
+      print(integrate(function(x) dchisq(x, length(res$n) - 1),res$chisq,+Inf))
+    }
 
   })
   
