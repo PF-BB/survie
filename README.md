@@ -10,4 +10,7 @@ Références
 
 RStudio and Inc. (2013). shiny: Web Application Framework for R. R
   package version 0.8.0. http://CRAN.R-project.org/package=shiny
+  
 
+
+`install.packages("ggplot2",lib = "/usr/local/lib/R/site-library",dependencies=TRUE)`
