@@ -15,7 +15,7 @@ shinyServer(function(input, output) {
     if (is.null(inFile))
       fichier <- NULL
     else
-      fichier <- read.csv(inFile$datapath,as.is=TRUE,na.strings=c("","N/C"))
+      fichier <- read.csv2(inFile$datapath, as.is=TRUE, na.strings=c("","N/C"), fileEncoding="iso-8859-1")
       #fichier <- read.csv(inFile$datapath,na.strings=c(" ","N/C"))
   })
 
@@ -25,10 +25,11 @@ shinyServer(function(input, output) {
   # include outliers if requested
   output$mkplot <- renderPlot({
     tab <- fichier()
-    date_de_fin <- as.Date( gsub("NA","",sprintf("%s%s",tab[, input$dn] , tab[, input$dc])) ,format="%m/%d/%Y")
-    date_de_chir <- as.Date(tab[, input$chir], format="%m/%d/%Y")
-    date_de_dn <- as.Date(tab[, input$dn], format="%m/%d/%Y")
-    date_de_dc <- as.Date(tab[, input$dc], format="%m/%d/%Y")
+    format_date <- "%d/%m/%y"
+    date_de_fin <- as.Date( gsub("NA","",sprintf("%s%s",tab[, input$dn] , tab[, input$dc])) ,format=format_date)
+    date_de_chir <- as.Date(tab[, input$chir], format=format_date)
+    date_de_dn <- as.Date(tab[, input$dn], format=format_date)
+    date_de_dc <- as.Date(tab[, input$dc], format=format_date)
 
     facteur <- factor(tab[, input$facteur])
     tobs <- as.numeric( date_de_fin - date_de_chir )
@@ -47,10 +48,11 @@ shinyServer(function(input, output) {
   
   output$summary <- renderPrint({
     tab <- fichier()
-    date_de_fin <- as.Date( gsub("NA","",sprintf("%s%s",tab[, input$dn] , tab[, input$dc])) ,format="%m/%d/%Y")
-    date_de_chir <- as.Date(tab[, input$chir], format="%m/%d/%Y")
-    date_de_dn <- as.Date(tab[, input$dn], format="%m/%d/%Y")
-    date_de_dc <- as.Date(tab[, input$dc], format="%m/%d/%Y")
+    format_date <- "%d/%m/%y"
+    date_de_fin <- as.Date( gsub("NA","",sprintf("%s%s",tab[, input$dn] , tab[, input$dc])) ,format=format_date)
+    date_de_chir <- as.Date(tab[, input$chir], format=format_date)
+    date_de_dn <- as.Date(tab[, input$dn], format=format_date)
+    date_de_dc <- as.Date(tab[, input$dc], format=format_date)
     facteur <- tab[, input$facteur]
     tobs <- as.numeric( date_de_fin - date_de_chir )
     evnt <- ((is.na(date_de_dn))) + 0
@@ -70,25 +72,25 @@ shinyServer(function(input, output) {
   output$chir <- renderUI({
     selectInput("chir", 
                 label="Date de chirurgie :",
-                c(Default="chir_date",names(fichier())) )
+                c(Default="PRV_DATE_CHIR",names(fichier())) )
   })
   ### Date de dernière nouvelle
   output$dn <- renderUI({
     selectInput("dn", 
                 label="Date de dernière nouvelle :",
-                c(Default="DN_date",names(fichier())) )
+                c(Default="DN_DATE",names(fichier())) )
   })
   ### Date de décés
   output$dc <- renderUI({
     selectInput("dc", 
                 label="Date de décés :",
-                c(Default="date_deces",names(fichier())) )
+                c(Default="DATE_DECES",names(fichier())) )
   })
   ### Facteur d'intérêt
   output$facteur <- renderUI({
     selectInput("facteur", 
                 label="Facteur d'intérêt :",
-                c(Default="IDH1",names(fichier())) )
+                c(Default="IDH",names(fichier())) )
   })
   
 })
