@@ -4,7 +4,10 @@ library(shiny)
 shinyUI(pageWithSidebar(
 
   # Application title
-  headerPanel("Analyse de données de survie"),
+  headerPanel("Analyse de données de survie",  
+    # Favicon
+    tags$head(tags$link(rel="shortcut icon", href="survival.ico"))
+  ),
 
   # Sidebar
   sidebarPanel(
